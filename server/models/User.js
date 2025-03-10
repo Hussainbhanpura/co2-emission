@@ -28,6 +28,10 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  communties:{  
+    type: [String],
+    default: [],
+  },
   createdAt: {
     type: Date,
     default: Date.now,
