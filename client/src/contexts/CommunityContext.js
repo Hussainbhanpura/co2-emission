@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
@@ -14,6 +14,8 @@ export const CommunityProvider = ({ children }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  // Add a cache to prevent duplicate API calls
+  const fetchCache = useRef({});
 
   // Configure axios with auth token
   const api = axios.create({
@@ -32,12 +34,39 @@ export const CommunityProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Fetch all posts
-  const fetchPosts = async (page = 1, limit = 10) => {
+  // Fetch all posts with rate limiting
+  const fetchPosts = useCallback(async (page = 1, limit = 10) => {
+    // Generate a cache key for this specific request
+    const cacheKey = `posts_${page}_${limit}`;
+    
+    // If we have recent cached data, return it without making a new request
+    if (fetchCache.current[cacheKey]) {
+      console.log('Using cached data for page', page);
+      return fetchCache.current[cacheKey];
+    }
+    
+    // Check if we have a timestamp for the last fetch for this page
+    const lastFetchTime = fetchCache.current[`time_${cacheKey}`] || 0;
+    const now = Date.now();
+    
+    // Implement rate limiting - only allow a fetch once every 5 seconds
+    if (now - lastFetchTime < 5000) {
+      console.log('Rate limiting fetch for page', page);
+      return fetchCache.current[cacheKey] || { data: [], pagination: { count: 0 } };
+    }
+    
+    // Update the timestamp for this request
+    fetchCache.current[`time_${cacheKey}`] = now;
+    
     setLoading(true);
     try {
+      console.log('Actually fetching data for page', page);
       const res = await api.get(`/posts?page=${page}&limit=${limit}`);
       setPosts(res.data.data);
+      
+      // Cache the result
+      fetchCache.current[cacheKey] = res.data;
+      
       return res.data;
     } catch (err) {
       setError(err.response?.data?.message || 'Error fetching posts');
@@ -46,7 +75,7 @@ export const CommunityProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [api, setLoading, setPosts, setError]);
 
   // Fetch single post
   const fetchPost = async (id) => {
