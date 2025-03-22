@@ -9,11 +9,11 @@ import {
 import { useToast } from "../../hooks/use-toast"
 
 export function Toaster() {
-  const { toasts } = useToast()
+  const { toasts = [] } = useToast() || {}
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts && toasts.map(function ({ id, title, description, action, ...props }) {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">

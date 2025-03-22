@@ -16,6 +16,7 @@ import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
+import { ToastProvider } from './hooks/use-toast';
 import { Toaster } from './components/ui/toaster';
 import { ToastProvider } from './hooks/use-toast';
 
@@ -65,6 +66,37 @@ function App() {
       <CommunityProvider>
         <ToastProvider>
           <Router>
+            <div className="min-h-screen bg-gray-50">
+              <Navbar />
+              <main className="pt-4">
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  
+                  {/* Admin-only Routes */}
+                  <Route path="/vehicle-statistics" element={
+                    <ProtectedAdminRoute>
+                      <VehicleStatistics />
+                    </ProtectedAdminRoute>
+                  } />
+                  
+                  {/* Protected Routes */}
+                  <Route element={<ProtectedRoute />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/community/post/:id" element={<PostDetail />} />
+                    <Route path="/community/edit/:id" element={<EditPost />} />
+                    <Route path="/profile" element={<Profile />} />
+                    {/* Add more protected routes here */}
+                  </Route>
+                  
+                  {/* Redirect to login if no route matches */}
+                  <Route path="/" element={<Navigate to="/login" />} />
+                  <Route path="*" element={<Navigate to="/login" />} />
+                </Routes>
+              </main>
+            </div>
             <AppContent />
             <Toaster />
           </Router>

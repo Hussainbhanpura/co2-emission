@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../components/ui/card';
 import CreatePostModal from './CreatePostModal';
+import ChatBot from '../../components/ChatBot';
 import { toast } from 'react-toastify';
 
 const CommunityPage = () => {
@@ -241,6 +242,9 @@ const CommunityPage = () => {
           onClose={() => setShowCreateModal(false)} 
         />
       )}
+      
+      {/* ChatBot Component */}
+      <ChatBot />
     </div>
   );
 };
