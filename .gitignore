@@ -1,3 +1,4 @@
+#Node Js ignore file
 # dependencies
 /node_modules
 /client/node_modules
