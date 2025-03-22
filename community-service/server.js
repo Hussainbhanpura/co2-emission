@@ -2,9 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const connectDB = require('./config/db');
 
 // Load environment variables
 dotenv.config();
+
+// Connect to MongoDB
+connectDB();
 
 // Create Express app
 const app = express();
@@ -15,9 +19,9 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Routes
-app.use('/api/posts', require('./routes/posts'));
-app.use('/api/comments', require('./routes/comments'));
-app.use('/api/likes', require('./routes/likes'));
+app.use('/posts', require('./routes/posts'));
+app.use('/comments', require('./routes/comments'));
+app.use('/likes', require('./routes/likes'));
 
 // Default route
 app.get('/', (req, res) => {
@@ -25,7 +29,7 @@ app.get('/', (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => {
   console.log(`Community service running on port ${PORT}`);
 });

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     // Use environment variable for MongoDB URI or a default for local development
-    const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/co2-community';
+    const mongoURI = process.env.MONGODB_URI;
     await mongoose.connect(mongoURI);
     console.log('MongoDB connected successfully');
   } catch (error) {
