@@ -1,10 +1,14 @@
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
+import Navbar from '../components/Navbar';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
 
 const Dashboard = () => {
   const { user, loading, logout } = useAuth();
+  const navigate = useNavigate();
   
   // Show loading state
   if (loading) {
@@ -18,36 +22,60 @@ const Dashboard = () => {
   
   const handleLogout = () => {
     logout();
+    navigate('/login');
   };
   
   return (
-    <div className="container mt-4">
-      <div style={{ 
-        backgroundColor: 'white', 
-        borderRadius: '10px', 
-        padding: '2rem',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <h2>Welcome, {user.name}!</h2>
-          <button 
-            className="btn btn-danger" 
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
-        </div>
-        <p className="mb-4">This is your CO2 Emissions Dashboard. Start tracking your carbon footprint today!</p>
+    <div className="min-h-screen bg-gray-100">
+      <Navbar />
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
         
-        {/* Placeholder for dashboard content */}
-        <div style={{ 
-          backgroundColor: '#f8f9fa', 
-          padding: '2rem', 
-          borderRadius: '8px',
-          border: '1px dashed #ddd'
-        }}>
-          <p className="text-center">Dashboard content will be displayed here</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>CO2 Emissions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">Track and monitor your carbon footprint</p>
+              <Button>View Emissions</Button>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Community</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">Connect with others and share your progress</p>
+              <Link to="/community">
+                <Button>Go to Community</Button>
+              </Link>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Tips & Resources</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">Learn how to reduce your carbon footprint</p>
+              <Button variant="outline">Explore Resources</Button>
+            </CardContent>
+          </Card>
         </div>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Your Carbon Footprint Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-gray-50 p-6 rounded-md border border-dashed border-gray-300 text-center">
+              <p className="text-gray-500">Your emissions data will be displayed here</p>
+              <p className="text-gray-400 text-sm mt-2">Start tracking your emissions to see your data</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
