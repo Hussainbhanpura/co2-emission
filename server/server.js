@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
+const proxy = require('express-http-proxy');
 require('dotenv').config();
 
 // Import routes
@@ -22,6 +23,26 @@ app.use(morgan('dev'));
 app.use('/api/auth', authRoutes);
 app.use('/api/emissions', emissionRoutes);
 app.use('/api/users', userRoutes);
+
+// Proxy requests to community service
+const COMMUNITY_SERVICE_URL = process.env.COMMUNITY_SERVICE_URL || 'http://localhost:5001';
+app.use('/api/community', proxy(COMMUNITY_SERVICE_URL, {
+  proxyReqPathResolver: (req) => {
+    // Remove /api/community prefix and pass the rest to the community service
+    const parts = req.url.split('?');
+    const queryString = parts[1] ? `?${parts[1]}` : '';
+    const newPath = `/api${parts[0].replace(/^\/api\/community/, '')}${queryString}`;
+    console.log(`Proxying request to community service: ${newPath}`);
+    return newPath;
+  },
+  proxyErrorHandler: (err, res, next) => {
+    console.error('Proxy error:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Community service error',
+    });
+  }
+}));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
