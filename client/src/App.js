@@ -18,7 +18,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { ToastProvider } from './hooks/use-toast';
 import { Toaster } from './components/ui/toaster';
-import { ToastProvider } from './hooks/use-toast';
 
 // Component to conditionally render Navbar
 const AppContent = () => {
