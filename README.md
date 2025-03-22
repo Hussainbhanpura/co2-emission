@@ -75,3 +75,4 @@ A MERN stack application for tracking and analyzing CO2 emissions.
 ## License
 
 MIT
+# Test update
