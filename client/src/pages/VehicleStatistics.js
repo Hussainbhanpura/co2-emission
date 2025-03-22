@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import { Badge } from '../components/ui/badge';
+import VehicleDetailsModal from '../components/VehicleDetailsModal';
 
 const VehicleStatistics = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -13,6 +14,7 @@ const VehicleStatistics = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'exceeding', 'stats'
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {      
@@ -54,6 +56,14 @@ const VehicleStatistics = () => {
     } else {
       return <Badge className="bg-green-500 hover:bg-green-600">✅ Good</Badge>;
     }
+  };
+
+  const handleVehicleClick = (vehicle) => {
+    setSelectedVehicle(vehicle);
+  };
+
+  const closeModal = () => {
+    setSelectedVehicle(null);
   };
   
   return (
@@ -191,7 +201,11 @@ const VehicleStatistics = () => {
                   </TableHeader>
                   <TableBody>
                     {vehicles.map((vehicle) => (
-                      <TableRow key={vehicle._id}>
+                      <TableRow 
+                        key={vehicle._id} 
+                        className="cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleVehicleClick(vehicle)}
+                      >
                         <TableCell className="font-medium">{vehicle.number}</TableCell>
                         <TableCell>{vehicle.name}</TableCell>
                         <TableCell>{vehicle.fuelType}</TableCell>
@@ -218,6 +232,14 @@ const VehicleStatistics = () => {
               )}
             </CardContent>
           </Card>
+        )}
+
+        {/* Vehicle Details Modal */}
+        {selectedVehicle && (
+          <VehicleDetailsModal 
+            vehicle={selectedVehicle} 
+            onClose={closeModal} 
+          />
         )}
       </div>
     </div>
