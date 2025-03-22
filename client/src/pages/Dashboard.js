@@ -2,7 +2,6 @@ import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Navigate, Link, useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
-import Navbar from '../components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 
@@ -27,7 +26,6 @@ const Dashboard = () => {
   
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
         

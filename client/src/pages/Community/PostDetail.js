@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCommunity } from '../../contexts/CommunityContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardFooter } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
-import Navbar from '../../components/Navbar';
 import { toast } from 'react-toastify';
 
 const PostDetail = () => {
@@ -89,7 +88,6 @@ const PostDetail = () => {
   if (loading && !post) {
     return (
       <div className="min-h-screen bg-gray-100">
-        <Navbar />
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
@@ -102,7 +100,6 @@ const PostDetail = () => {
   if (!post) {
     return (
       <div className="min-h-screen bg-gray-100">
-        <Navbar />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-10">
             <h2 className="text-2xl text-gray-600">Post not found</h2>
@@ -117,7 +114,6 @@ const PostDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <Link to="/community" className="text-blue-600 hover:underline flex items-center">
