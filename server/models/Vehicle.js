@@ -18,6 +18,16 @@ const VehicleSchema = new mongoose.Schema({
     enum: ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'CNG', 'LPG'],
     trim: true
   },
+  ownerName: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  ownerLocation: {
+    type: String,
+    default: '',
+    trim: true
+  },
   carbonFootprint: {
     distanceTravelled: {
       type: Number,
@@ -36,8 +46,7 @@ const VehicleSchema = new mongoose.Schema({
     },
     status: {
       type: String,
-      default: '✅ Good',
-      enum: ['✅ Good', '⚠️ Warning', '❌ Exceeding Limit']
+      default: '✅ Good'
     }
   },
   notificationSent: {

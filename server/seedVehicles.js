@@ -29,6 +29,8 @@ const vehicles = [
     expiryDate: "2028-06-15",
     status: "Active",
     contact: "+919876543211",
+    ownerName: "",
+    ownerLocation: "",
     carbonFootprint: {
       distanceTravelled: 150,
       fuelEfficiency: 20,
@@ -51,6 +53,8 @@ const vehicles = [
     expiryDate: "2031-04-05",
     status: "Active",
     contact: "+919876543212",
+    ownerName: "",
+    ownerLocation: "",
     carbonFootprint: {
       distanceTravelled: 80,
       fuelEfficiency: 15,
@@ -73,6 +77,8 @@ const vehicles = [
     expiryDate: "2027-07-22",
     status: "Inactive",
     contact: "+919876543213",
+    ownerName: "",
+    ownerLocation: "",
     carbonFootprint: {
       distanceTravelled: 120,
       fuelEfficiency: 17,
@@ -95,6 +101,8 @@ const vehicles = [
     expiryDate: "2030-03-10",
     status: "Active",
     contact: "+919876543214",
+    ownerName: "",
+    ownerLocation: "",
     carbonFootprint: {
       distanceTravelled: 200,
       fuelEfficiency: 20,
@@ -117,6 +125,8 @@ const vehicles = [
     expiryDate: "2032-02-25",
     status: "Active",
     contact: "+919876543215",
+    ownerName: "",
+    ownerLocation: "",
     carbonFootprint: {
       distanceTravelled: 50,
       fuelEfficiency: 18,
