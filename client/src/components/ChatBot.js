@@ -81,6 +81,13 @@ const ChatBot = () => {
     ));
   };
 
+  const cleanResponse = (response) => {
+    return response
+      .replace(/[{}]/g, '')
+      .replace(/\/body/g, '')
+      .trim();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!inputMessage.trim() || currentlyTyping) return;
@@ -93,47 +100,40 @@ const ChatBot = () => {
 
     try {
       // Using the provided API key for OpenRouter
-      const OPENROUTER_API_KEY = "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";
+      const OPENROUTER_API_KEY = "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";
       
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      const url = "https://openrouter.ai/api/v1/chat/completions";
+      const options = {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-          "HTTP-Referer": "https://co2-emission-monitor.com",
-          "X-Title": "CO2 Emission Monitor",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          "model": "deepseek/deepseek-r1-zero:free",
+          "model": "google/gemini-2.0-flash-thinking-exp:free",
           "messages": [
             {
               "role": "system",
-              "content": "You are a helpful assistant specialized in environmental topics, particularly CO2 emissions, pollution, climate change, and sustainable practices. Provide accurate, concise, and helpful information to users about reducing their carbon footprint and living more sustainably. Keep responses focused on environmental topics. Format your responses with proper paragraphs, bullet points using numbers (1., 2., etc.), and line breaks for readability."
+              "content": "You are a helpful assistant focused on environmental topics. Provide very short answers (1-2 sentences max) about reducing carbon footprint and sustainable practices. Never use curly braces, /body, or other special formatting. Only provide plain text responses."
             },
             ...messages.map(msg => ({ role: msg.role, content: msg.content })),
             { role: 'user', content: inputMessage }
           ]
         })
-      });
+      };
 
+      const response = await fetch(url, options);
       const data = await response.json();
       
       if (data.choices && data.choices[0] && data.choices[0].message) {
-        // Add assistant message with empty content initially
+        // Add assistant message with full content
         const assistantMessage = { 
           role: 'assistant', 
-          content: '', 
-          done: false 
+          content: cleanResponse(data.choices[0].message.content), 
+          done: true 
         };
-        
-        const newMessageIndex = messages.length + 1; // +1 for the user message we just added
         setMessages(prev => [...prev, assistantMessage]);
         setIsLoading(false);
-        
-        // Start typing effect after a short delay
-        setTimeout(() => {
-          simulateTypingEffect(data.choices[0].message.content, newMessageIndex);
-        }, 500);
       } else {
         throw new Error('Invalid response format');
       }
