@@ -14,11 +14,7 @@ import AQI from './pages/AQI';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
-import { ToastProvider } from './hooks/use-toast';
-import { Toaster } from './components/ui/toaster';
 
 // Component to conditionally render Navbar
 const AppContent = () => {
@@ -65,13 +61,9 @@ function App() {
   return (
     <AuthProvider>
       <CommunityProvider>
-        <ToastProvider>
-          <Router>
-            <AppContent />
-            <Toaster />
-          </Router>
-          <ToastContainer position="top-right" autoClose={5000} />
-        </ToastProvider>
+        <Router>
+          <AppContent />
+        </Router>
       </CommunityProvider>
     </AuthProvider>
   );

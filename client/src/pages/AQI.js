@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { toast } from 'react-toastify';
+
 
 // Mock data for development - will be used as fallback if API fails
 const mockCities = [
@@ -42,27 +42,7 @@ const mockAQIData = {
   }
 };
 
-// Historical data for charts
-const mockHistoricalData = {
-  hourly: Array(24).fill().map((_, i) => ({
-    time: `${i}:00`,
-    pm25: Math.floor(Math.random() * 80) + 20,
-    pm10: Math.floor(Math.random() * 100) + 30,
-    o3: Math.floor(Math.random() * 50) + 10,
-    no2: Math.floor(Math.random() * 30) + 5,
-  })),
-  daily: Array(7).fill().map((_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    return {
-      date: date.toLocaleDateString('en-US', { weekday: 'short' }),
-      pm25: Math.floor(Math.random() * 80) + 20,
-      pm10: Math.floor(Math.random() * 100) + 30,
-      o3: Math.floor(Math.random() * 50) + 10,
-      no2: Math.floor(Math.random() * 30) + 5,
-    };
-  }).reverse(),
-};
+// Historical data for charts removed
 
 // Mock news data
 const mockNews = [
@@ -148,9 +128,10 @@ const AQI = () => {
   const [selectedCity, setSelectedCity] = useState(mockCities[0]);
   const [searchQuery, setSearchQuery] = useState('');
   const [aqiData, setAqiData] = useState(mockAQIData);
-  const [historicalData, setHistoricalData] = useState(mockHistoricalData);
+  // historicalData state variable removed
+  // Removed pollution trends state variables
   const [news, setNews] = useState(mockNews);
-  const [timeRange, setTimeRange] = useState('24h');
+  // timeRange state variable removed
   const [loading, setLoading] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [locationLoading, setLocationLoading] = useState(true);
@@ -200,7 +181,7 @@ const AQI = () => {
               city.country.toLowerCase().includes(searchQuery.toLowerCase())
             );
             setCities(filteredMockCities);
-            toast.warning('Using local city data due to API limitations');
+            console.log('Using local city data due to API limitations');
           }
         } finally {
           if (isMounted) {
@@ -270,7 +251,7 @@ const AQI = () => {
       console.error('Error fetching cities:', error);
       // Fallback to mock data if API fails
       setCities(mockCities);
-      toast.warning('Using local city data due to API limitations');
+      console.log('Using local city data due to API limitations');
     }
   };
 
@@ -321,7 +302,7 @@ const AQI = () => {
             if (isMounted) {
               setSelectedCity(parsedLocation.city);
               setLocationLoading(false);
-              toast.info(`Using your saved location: ${parsedLocation.city.name}`);
+              console.log(`Using saved location: ${parsedLocation.city.name}`);
             }
             
             return;
@@ -369,7 +350,7 @@ const AQI = () => {
                   // Check if we received fallback data
                   if (apiError.response && apiError.response.data && apiError.response.data.data) {
                     locationData = apiError.response.data.data;
-                    toast.warning('Using approximate location data due to API limitations');
+                    console.log('Using approximate location data due to API limitations');
                   } else {
                     throw new Error('Could not determine your city from coordinates');
                   }
@@ -409,14 +390,14 @@ const AQI = () => {
                 setSelectedCity(userCity);
                 setLocationLoading(false);
                 
-                toast.success(`Located you in ${userCity.name}, ${userCity.administrativeArea}, ${userCity.country}`);
+                console.log(`Located user in ${userCity.name}, ${userCity.administrativeArea}, ${userCity.country}`);
               }
             } catch (error) {
               console.error('Error getting location details:', error);
               if (isMounted) {
                 setLocationLoading(false);
                 setError('Could not determine your city. Please select manually.');
-                toast.error('Could not determine your city. Please select manually.');
+                console.log('Could not determine user city');
                 
                 // Fallback to a default city
                 if (cities.length > 0) {
@@ -430,7 +411,7 @@ const AQI = () => {
             if (isMounted) {
               setLocationLoading(false);
               setError('Location access denied. Please select your city manually.');
-              toast.error('Location access denied. Please select your city manually.');
+              console.log('Location access denied');
               
               // Fallback to a default city
               if (cities.length > 0) {
@@ -444,7 +425,7 @@ const AQI = () => {
         if (isMounted) {
           setLocationLoading(false);
           setError('Geolocation is not supported by your browser. Please select your city manually.');
-          toast.error('Geolocation is not supported by your browser. Please select your city manually.');
+          console.log('Geolocation not supported');
           
           // Fallback to a default city
           if (cities.length > 0) {
@@ -502,7 +483,7 @@ const AQI = () => {
     
     let isMounted = true;
     let requestCancelled = false;
-    let toastShown = false; // Flag to track if a toast has been shown for this fetch
+
     
     const fetchAQIData = async () => {
       if (!isMounted) return;
@@ -528,16 +509,12 @@ const AQI = () => {
               setAqiData(parsedData);
               setLoading(false);
               
-              // Only show toast if none has been shown yet
-              if (!toastShown) {
-                toast.info(`Showing recent air quality data for ${selectedCity.name}`);
-                toastShown = true;
-              }
+              console.log(`Using cached AQI data for ${selectedCity.name}`);
               
               // Still load historical data if available
-              if (parsedData.historicalData) {
-                setHistoricalData(parsedData.historicalData);
-              }
+              // historicalData handling removed
+              
+              // Pollution trends feature removed
               
               return;
             }
@@ -566,10 +543,11 @@ const AQI = () => {
             category: getAQICategory(apiData.aqi),
             color: getAQIColor(apiData.aqi),
             dominantPollutant: apiData.dominentpol || 'pm25',
+            uid: apiData.idx, // Store the station ID for pollution trends
             timestamp: new Date().toISOString(),
             weather: {
               temperature: apiData.iaqi.t ? apiData.iaqi.t.v : 25,
-              humidity: apiData.iaqi.h ? apiData.iaqi.h.v : 50,
+              humidity: apiData.iaqi.h ? parseFloat(apiData.iaqi.h.v.toFixed(3)) : 50,
               windSpeed: apiData.iaqi.w ? apiData.iaqi.w.v : 5,
               windDirection: apiData.iaqi.wd ? apiData.iaqi.wd.v : 'N',
             },
@@ -609,46 +587,18 @@ const AQI = () => {
           };
           
           // Process historical data if available
-          let historicalDataObj = null;
+          // historicalData handling removed
           
           if (apiData.forecast && apiData.forecast.daily) {
             const historicalPm25 = apiData.forecast.daily.pm25 || [];
             const historicalPm10 = apiData.forecast.daily.pm10 || [];
             const historicalO3 = apiData.forecast.daily.o3 || [];
             
-            // Create daily historical data
-            const dailyData = historicalPm25.map((item, index) => {
-              const date = new Date(item.day);
-              return {
-                date: date.toLocaleDateString('en-US', { weekday: 'short' }),
-                pm25: item.avg,
-                pm10: historicalPm10[index] ? historicalPm10[index].avg : 0,
-                o3: historicalO3[index] ? historicalO3[index].avg : 0,
-                no2: Math.floor(Math.random() * 30) + 5, // Mock data for NO2 since it might not be available
-              };
-            });
-            
-            // Create hourly data (mock since hourly forecast might not be available)
-            const hourlyData = Array(24).fill().map((_, i) => ({
-              time: `${i}:00`,
-              pm25: Math.floor(transformedData.pollutants.pm25.concentration * (0.8 + Math.random() * 0.4)),
-              pm10: Math.floor(transformedData.pollutants.pm10.concentration * (0.8 + Math.random() * 0.4)),
-              o3: Math.floor(transformedData.pollutants.o3.concentration * (0.8 + Math.random() * 0.4)),
-              no2: Math.floor(transformedData.pollutants.no2.concentration * (0.8 + Math.random() * 0.4)),
-            }));
-            
-            historicalDataObj = {
-              daily: dailyData,
-              hourly: hourlyData
-            };
-            
-            if (isMounted) {
-              setHistoricalData(historicalDataObj);
-            }
+            // Historical data processing removed
           }
           
           // Add historical data to the transformed data for caching
-          transformedData.historicalData = historicalDataObj;
+          // historicalData assignment removed
           
           // Cache the data
           sessionStorage.setItem(cacheKey, JSON.stringify(transformedData));
@@ -657,11 +607,9 @@ const AQI = () => {
             setAqiData(transformedData);
             setLoading(false);
             
-            // Only show toast if none has been shown yet
-            if (!toastShown) {
-              toast.success(`Latest air quality data for ${selectedCity.name} has been loaded.`);
-              toastShown = true;
-            }
+            console.log(`Latest air quality data for ${selectedCity.name} has been loaded.`);
+            
+            // Pollution trends feature removed
           }
         } else {
           throw new Error('Failed to fetch AQI data');
@@ -677,11 +625,7 @@ const AQI = () => {
         if (isMounted) {
           setError('Could not fetch AQI data. Using mock data instead.');
           
-          // Only show toast if none has been shown yet
-          if (!toastShown) {
-            toast.error('Could not fetch AQI data. Using mock data instead.');
-            toastShown = true;
-          }
+          console.log('Could not fetch AQI data. Using mock data instead.');
           
           // Fallback to mock data with some variation based on city
           const cityIndex = cities.findIndex(city => city.id === selectedCity.id);
@@ -709,7 +653,7 @@ const AQI = () => {
           newAqiData.color = getAQIColor(newAqiData.aqi);
           
           // Cache the mock data too, but with a shorter expiration
-          newAqiData.historicalData = historicalData;
+          // historicalData assignment removed
           sessionStorage.setItem(cacheKey, JSON.stringify(newAqiData));
           
           setAqiData(newAqiData);
@@ -724,7 +668,7 @@ const AQI = () => {
       isMounted = false;
       requestCancelled = true;
     };
-  }, [selectedCity, cities, historicalData]);
+  }, [selectedCity, cities]);
 
 
 
@@ -744,57 +688,34 @@ const AQI = () => {
     (city.administrativeArea && city.administrativeArea.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  // Create a mock chart visualization using divs
-  const renderMockChart = () => {
-    const data = timeRange === '24h' ? historicalData.hourly : historicalData.daily;
-    const maxValue = Math.max(...data.map(item => Math.max(item.pm25, item.pm10, item.o3, item.no2)));
+  // Render PurpleAir map using iframe
+  const renderAQIMap = () => {
+    // Default map URL
+    let mapUrl = "https://map.purpleair.com";
+    
+    // If user location is available, add parameters to center the map
+    if (userLocation) {
+      // PurpleAir map accepts lat, lon and zoom parameters
+      // Zoom level 11 provides a good neighborhood view
+      mapUrl = `https://map.purpleair.com/?lat=${userLocation.lat}&lon=${userLocation.lng}&zoom=11`;
+    }
     
     return (
-      <div className="flex items-end h-64 space-x-1 mt-4">
-        {data.map((item, index) => (
-          <div key={index} className="flex-1 flex flex-col items-center">
-            <div className="w-full flex flex-col-reverse">
-              <div 
-                className="w-full bg-blue-500 rounded-t" 
-                style={{ 
-                  height: `${(item.pm25 / maxValue) * 100}%`,
-                  minHeight: '4px'
-                }}
-                title={`PM2.5: ${item.pm25}`}
-              ></div>
-              <div 
-                className="w-full bg-green-500 rounded-t" 
-                style={{ 
-                  height: `${(item.pm10 / maxValue) * 100}%`,
-                  minHeight: '4px'
-                }}
-                title={`PM10: ${item.pm10}`}
-              ></div>
-              <div 
-                className="w-full bg-purple-500 rounded-t" 
-                style={{ 
-                  height: `${(item.o3 / maxValue) * 100}%`,
-                  minHeight: '4px'
-                }}
-                title={`O3: ${item.o3}`}
-              ></div>
-              <div 
-                className="w-full bg-red-500 rounded-t" 
-                style={{ 
-                  height: `${(item.no2 / maxValue) * 100}%`,
-                  minHeight: '4px'
-                }}
-                title={`NO2: ${item.no2}`}
-              ></div>
-            </div>
-            <span className="text-xs mt-1 text-gray-600">
-              {timeRange === '24h' ? item.time : item.date}
-            </span>
-          </div>
-        ))}
-      </div>
+      <iframe 
+        title="PurpleAir Map"
+        width="100%" 
+        height="500" 
+        src={mapUrl} 
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; geolocation"
+        allowFullScreen
+      ></iframe>
     );
   };
+
+  // Pollution trends feature removed
+  
+  // Chart visualization removed
 
   // Create a mock map visualization
   const renderMockMap = () => {
@@ -963,7 +884,7 @@ const AQI = () => {
               </div>
               <div className="text-center">
                 <p className="text-sm text-gray-500">Humidity</p>
-                <p className="font-semibold text-lg">{aqiData.weather.humidity}%</p>
+                <p className="font-semibold text-lg">{aqiData.weather.humidity.toFixed(3)}%</p>
               </div>
               <div className="text-center">
                 <p className="text-sm text-gray-500">Wind</p>
@@ -1029,61 +950,9 @@ const AQI = () => {
         </Card>
       </div>
 
-      {/* Historical Data Charts */}
-      <Card className="mb-8 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <CardTitle>Pollution Trends</CardTitle>
-              <CardDescription>Historical data for key pollutants</CardDescription>
-            </div>
-            <div className="flex space-x-2 bg-white p-1 rounded-lg shadow-sm">
-              <Button 
-                variant={timeRange === '24h' ? 'default' : 'outline'} 
-                onClick={() => setTimeRange('24h')}
-                className="text-sm"
-              >
-                24 Hours
-              </Button>
-              <Button 
-                variant={timeRange === '7d' ? 'default' : 'outline'} 
-                onClick={() => setTimeRange('7d')}
-                className="text-sm"
-              >
-                7 Days
-              </Button>
-              <Button 
-                variant={timeRange === '1m' ? 'default' : 'outline'} 
-                onClick={() => setTimeRange('1m')}
-                className="text-sm"
-              >
-                1 Month
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="bg-white p-6">
-          {renderMockChart()}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div className="flex items-center space-x-2 p-2 rounded-lg bg-blue-50">
-              <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-              <span className="text-sm text-blue-700 font-medium">PM2.5</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 rounded-lg bg-green-50">
-              <div className="w-4 h-4 rounded-full bg-green-500"></div>
-              <span className="text-sm text-green-700 font-medium">PM10</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 rounded-lg bg-purple-50">
-              <div className="w-4 h-4 rounded-full bg-purple-500"></div>
-              <span className="text-sm text-purple-700 font-medium">O₃</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 rounded-lg bg-red-50">
-              <div className="w-4 h-4 rounded-full bg-red-500"></div>
-              <span className="text-sm text-red-700 font-medium">NO₂</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Pollution Trends section removed */}
+      
+      {/* Historical Data section removed */}
 
       {/* AQI Map */}
       <Card className="mb-8 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
@@ -1092,8 +961,8 @@ const AQI = () => {
           <CardDescription>Real-time air quality across different locations</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="h-[400px] w-full">
-            {renderMockMap()}
+          <div className="h-[500px] w-full">
+            {renderAQIMap()}
           </div>
         </CardContent>
       </Card>

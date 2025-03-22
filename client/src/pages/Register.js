@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaLeaf } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import '../assets/css/auth.css';
 
 const Register = () => {
@@ -28,7 +27,7 @@ const Register = () => {
   // Show error message if there's an error
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      console.error(error);
       clearError();
     }
   }, [error, clearError]);
@@ -92,7 +91,7 @@ const Register = () => {
       // Send only the required fields to register
       const { name, email, password } = formData;
       await register({ name, email, password });
-      toast.success('Registration successful!');
+      console.log('Registration successful!');
       // Navigation will happen automatically due to the useEffect
     } catch (err) {
       // Error is handled by the useEffect that watches the error state
@@ -197,7 +196,7 @@ const Register = () => {
           </p>
         </div>
       </div>
-      <ToastContainer position="top-right" autoClose={5000} />
+
     </div>
   );
 };

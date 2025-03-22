@@ -249,7 +249,7 @@ router.get('/geo/:lat/:lng', async (req, res) => {
           distanceToCity: minDistance * 111, // rough conversion to km (1 degree ≈ 111km)
           aqi: aqiData.aqi,
           temperature: aqiData.iaqi.t ? aqiData.iaqi.t.v : null,
-          humidity: aqiData.iaqi.h ? aqiData.iaqi.h.v : null,
+          humidity: aqiData.iaqi.h ? parseFloat(aqiData.iaqi.h.v.toFixed(3)) : null,
           wind: aqiData.iaqi.w ? aqiData.iaqi.w.v : null,
           time: aqiData.time
         }
@@ -307,5 +307,4 @@ router.get('/cities', async (req, res) => {
     });
   }
 });
-
-module.exports = router;
+// Historical pollution trends endpoint removed
