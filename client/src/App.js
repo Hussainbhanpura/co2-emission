@@ -10,6 +10,7 @@ import PostDetail from './pages/Community/PostDetail';
 import EditPost from './pages/Community/EditPost';
 import VehicleStatistics from './pages/VehicleStatistics';
 import Profile from './pages/Profile';
+import AQI from './pages/AQI';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
@@ -48,6 +49,7 @@ const AppContent = () => {
             <Route path="/community/post/:id" element={<PostDetail />} />
             <Route path="/community/edit/:id" element={<EditPost />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/aqi" element={<AQI />} />
             {/* Add more protected routes here */}
           </Route>
           

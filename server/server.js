@@ -11,6 +11,10 @@ const authRoutes = require('./routes/auth');
 const emissionRoutes = require('./routes/emissions');
 const userRoutes = require('./routes/users');
 const vehicleRoutes = require('./routes/vehicles');
+const statisticsRoutes = require('./routes/statistics');
+const profileRoutes = require('./routes/profile');
+const aqiRoutes = require('./routes/aqi');
+const weatherRoutes = require('./routes/weather');
 
 // Initialize express app
 const app = express();
@@ -18,6 +22,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // Define routes
@@ -25,6 +30,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/emissions', emissionRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/statistics', statisticsRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/aqi', aqiRoutes);
+app.use('/api/weather', weatherRoutes);
 
 // Proxy requests to community service
 const COMMUNITY_SERVICE_URL = process.env.COMMUNITY_SERVICE_URL || 'http://localhost:5002';
