@@ -10,6 +10,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const emissionRoutes = require('./routes/emissions');
 const userRoutes = require('./routes/users');
+const vehicleRoutes = require('./routes/vehicles');
 
 // Initialize express app
 const app = express();
@@ -23,6 +24,7 @@ app.use(morgan('dev'));
 app.use('/api/auth', authRoutes);
 app.use('/api/emissions', emissionRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/vehicles', vehicleRoutes);
 
 // Proxy requests to community service
 const COMMUNITY_SERVICE_URL = process.env.COMMUNITY_SERVICE_URL || 'http://localhost:5001';
