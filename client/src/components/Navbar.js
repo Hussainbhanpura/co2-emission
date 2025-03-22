@@ -31,6 +31,11 @@ const Navbar = () => {
             <Link to="/community" className="text-gray-700 hover:text-green-600">
               Community
             </Link>
+            {user && user.role === 'admin' && (
+              <Link to="/vehicle-statistics" className="text-gray-700 hover:text-green-600">
+                Vehicle Statistics
+              </Link>
+            )}
             {user && (
               <div className="relative group">
                 <button className="flex items-center text-gray-700 hover:text-green-600">
@@ -108,6 +113,15 @@ const Navbar = () => {
             >
               Community
             </Link>
+            {user && user.role === 'admin' && (
+              <Link 
+                to="/vehicle-statistics" 
+                className="block py-2 text-gray-700 hover:text-green-600"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Vehicle Statistics
+              </Link>
+            )}
             {user && (
               <>
                 <Link 
