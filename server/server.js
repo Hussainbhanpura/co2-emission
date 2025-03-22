@@ -27,13 +27,13 @@ app.use('/api/users', userRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 
 // Proxy requests to community service
-const COMMUNITY_SERVICE_URL = process.env.COMMUNITY_SERVICE_URL || 'http://localhost:5001';
+const COMMUNITY_SERVICE_URL = process.env.COMMUNITY_SERVICE_URL || 'http://localhost:5002';
 app.use('/api/community', proxy(COMMUNITY_SERVICE_URL, {
   proxyReqPathResolver: (req) => {
     // Remove /api/community prefix and pass the rest to the community service
     const parts = req.url.split('?');
     const queryString = parts[1] ? `?${parts[1]}` : '';
-    const newPath = `/api${parts[0].replace(/^\/api\/community/, '')}${queryString}`;
+    const newPath = `${parts[0].replace(/^\/api\/community/, '')}${queryString}`;
     console.log(`Proxying request to community service: ${newPath}`);
     return newPath;
   },

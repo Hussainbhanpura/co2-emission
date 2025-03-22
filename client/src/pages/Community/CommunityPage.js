@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useCommunity } from '../../contexts/CommunityContext';
 import { useAuth } from '../../contexts/AuthContext';
@@ -14,16 +14,57 @@ const CommunityPage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  // Track if we've already loaded posts for a specific page
+  const loadedPages = useRef({});
+  // Prevent multiple fetch calls during component mounting/updating
+  const isMounted = useRef(false);
+  // Track the last fetch time
+  const lastFetchTime = useRef(0);
 
-  useEffect(() => {
-    const loadPosts = async () => {
-      const result = await fetchPosts(currentPage);
+  // Create a memoized function for loading posts that won't change on re-renders
+  const loadPosts = useCallback(async (page) => {
+    // Implement strict controls against excessive polling
+    const now = Date.now();
+    
+    // Only fetch if:
+    // 1. We haven't loaded this page before OR
+    // 2. It's been at least 10 seconds since the last fetch
+    if (!loadedPages.current[page] || (now - lastFetchTime.current > 10000)) {
+      console.log('Fetching posts for page', page);
+      lastFetchTime.current = now;
+      
+      const result = await fetchPosts(page);
       if (result && result.pagination) {
         setTotalPages(Math.ceil(result.count / 10));
       }
+      
+      // Mark this page as loaded
+      loadedPages.current[page] = true;
+    } else {
+      console.log('Skipping fetch for page', page);
+    }
+  }, [fetchPosts]);
+
+  // Use a separate effect for the initial mount to ensure we only fetch once
+  useEffect(() => {
+    if (!isMounted.current) {
+      console.log('Initial page load');
+      loadPosts(currentPage);
+      isMounted.current = true;
+    }
+  }, [loadPosts, currentPage]);
+  
+  // This effect only runs when the page actually changes
+  useEffect(() => {
+    if (isMounted.current) {
+      console.log('Page changed to', currentPage);
+      loadPosts(currentPage);
+    }
+    
+    return () => {
+      // No cleanup needed
     };
-    loadPosts();
-  }, [fetchPosts, currentPage]);
+  }, [currentPage, loadPosts]);
 
   const handleLike = async (postId) => {
     const post = posts.find(p => p._id === postId);

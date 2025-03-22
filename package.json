@@ -1,0 +1,27 @@
+{
+  "name": "co2-emission",
+  "version": "1.0.0",
+  "description": "CO2 Emission Tracker Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run start:server\" \"npm run start:community\" \"npm run start:client\"",
+    "start:client": "cd client && npm start",
+    "start:server": "cd server && npm start",
+    "start:community": "cd community-service && npm start",
+    "install:all": "npm install && npm run install:client && npm run install:server && npm run install:community",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "install:community": "cd community-service && npm install"
+  },
+  "keywords": [
+    "co2",
+    "emission",
+    "tracking",
+    "community"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
