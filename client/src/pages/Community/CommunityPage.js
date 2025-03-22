@@ -4,8 +4,8 @@ import { useCommunity } from '../../contexts/CommunityContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../components/ui/card';
-import Navbar from '../../components/Navbar';
 import CreatePostModal from './CreatePostModal';
+import ChatBot from '../../components/ChatBot';
 import { toast } from 'react-toastify';
 
 const CommunityPage = () => {
@@ -86,7 +86,6 @@ const CommunityPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Community</h1>
@@ -243,6 +242,9 @@ const CommunityPage = () => {
           onClose={() => setShowCreateModal(false)} 
         />
       )}
+      
+      {/* ChatBot Component */}
+      <ChatBot />
     </div>
   );
 };
