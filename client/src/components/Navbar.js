@@ -57,6 +57,9 @@ const Navbar = () => {
             <Link to="/community" className="text-gray-700 hover:text-green-600">
               Community
             </Link>
+            <Link to="/aqi" className="text-gray-700 hover:text-green-600">
+              AQI Monitor
+            </Link>
             {user && user.role === 'admin' && (
               <Link to="/vehicle-statistics" className="text-gray-700 hover:text-green-600">
                 Vehicle Statistics
@@ -147,6 +150,13 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Community
+            </Link>
+            <Link 
+              to="/aqi" 
+              className="block py-2 text-gray-700 hover:text-green-600"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              AQI Monitor
             </Link>
             {user && user.role === 'admin' && (
               <Link 
