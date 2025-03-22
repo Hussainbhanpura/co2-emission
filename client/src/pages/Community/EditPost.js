@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCommunity } from '../../contexts/CommunityContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
+import { Card, CardContent, CardHeader, CardFooter, CardTitle } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../components/ui/card';
-import Navbar from '../../components/Navbar';
+import { toast } from 'react-toastify';
 
 const EditPost = () => {
   const { id } = useParams();
@@ -69,7 +70,6 @@ const EditPost = () => {
   if (loading && !post) {
     return (
       <div className="min-h-screen bg-gray-100">
-        <Navbar />
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
@@ -81,7 +81,6 @@ const EditPost = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <Link to={`/community/post/${id}`} className="text-blue-600 hover:underline flex items-center">
