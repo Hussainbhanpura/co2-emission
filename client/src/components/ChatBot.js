@@ -100,7 +100,7 @@ const ChatBot = () => {
 
     try {
       // Using the provided API key for OpenRouter
-      const OPENROUTER_API_KEY = "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";
+      const OPENROUTER_API_KEY = "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";
       
       const url = "https://openrouter.ai/api/v1/chat/completions";
       const options = {
