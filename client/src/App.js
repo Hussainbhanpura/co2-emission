@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import CommunityPage from './pages/Community/CommunityPage';
 import PostDetail from './pages/Community/PostDetail';
 import EditPost from './pages/Community/EditPost';
+import VehicleStatistics from './pages/VehicleStatistics';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,6 +23,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/vehicle-statistics" element={<VehicleStatistics />} />
             
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
