@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from './ui/button';
@@ -7,6 +7,32 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Generate avatar URL based on user's email
+  useEffect(() => {
+    if (user?.email) {
+      const styles = ['adventurer', 'adventurer-neutral', 'avataaars', 'big-ears', 'big-ears-neutral', 'bottts', 'croodles', 'croodles-neutral'];
+      const randomStyle = styles[Math.floor(Math.random() * styles.length)];
+      const url = `https://api.dicebear.com/7.x/${randomStyle}/svg?seed=${encodeURIComponent(user.email)}`;
+      setAvatarUrl(url);
+    }
+  }, [user?.email]);
 
   const handleLogout = () => {
     logout();
@@ -37,29 +63,38 @@ const Navbar = () => {
               </Link>
             )}
             {user && (
-              <div className="relative group">
-                <button className="flex items-center text-gray-700 hover:text-green-600">
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  className="flex items-center text-gray-700 hover:text-green-600"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                >
                   <span className="mr-2">{user.name}</span>
                   <img 
-                    src={user.avatar || 'https://via.placeholder.com/32'} 
+                    src={avatarUrl || 'https://via.placeholder.com/32'} 
                     alt={user.name}
-                    className="w-8 h-8 rounded-full"
+                    className="w-8 h-8 rounded-full border-2 border-green-100"
                   />
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
-                  <Link 
-                    to="/profile" 
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Profile
-                  </Link>
-                  <button 
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
-                </div>
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                    <Link 
+                      to="/profile" 
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <button 
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                        handleLogout();
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -132,7 +167,10 @@ const Navbar = () => {
                   Profile
                 </Link>
                 <button 
-                  onClick={handleLogout}
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    handleLogout();
+                  }}
                   className="block w-full text-left py-2 text-gray-700 hover:text-green-600"
                 >
                   Logout
