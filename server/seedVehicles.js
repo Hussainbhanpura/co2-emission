@@ -29,15 +29,15 @@ const vehicles = [
     expiryDate: "2028-06-15",
     status: "Active",
     contact: "+919876543211",
-    ownerName: "",
-    ownerLocation: "",
+    ownerName: "Rahul Sharma",
+    ownerLocation: "Pune, Maharashtra",
     carbonFootprint: {
       distanceTravelled: 150,
       fuelEfficiency: 20,
       carbonEmitted: 8.25,
       status: "✅ Good"
     },
-    lastChecked: "2025-03-21T11:00:00Z",
+    lastChecked: "2023-03-21T11:00:00Z",
     imageLink: "https://server.com/images/MH12CD5678.jpeg",
     notificationSent: false
   },
@@ -53,15 +53,15 @@ const vehicles = [
     expiryDate: "2031-04-05",
     status: "Active",
     contact: "+919876543212",
-    ownerName: "",
-    ownerLocation: "",
+    ownerName: "John Doe",
+    ownerLocation: "Mumbai, Maharashtra",
     carbonFootprint: {
       distanceTravelled: 80,
       fuelEfficiency: 15,
       carbonEmitted: 15.20,
       status: "❌ Exceeding Limit"
     },
-    lastChecked: "2025-03-19T10:45:00Z",
+    lastChecked: "2023-03-19T10:45:00Z",
     imageLink: "https://server.com/images/MH12EF9012.jpeg",
     notificationSent: true
   },
@@ -77,15 +77,15 @@ const vehicles = [
     expiryDate: "2027-07-22",
     status: "Inactive",
     contact: "+919876543213",
-    ownerName: "",
-    ownerLocation: "",
+    ownerName: "Amit Kumar",
+    ownerLocation: "Delhi",
     carbonFootprint: {
       distanceTravelled: 120,
       fuelEfficiency: 17,
       carbonEmitted: 10.59,
       status: "✅ Good"
     },
-    lastChecked: "2025-03-22T09:30:00Z",
+    lastChecked: "2023-03-22T09:30:00Z",
     imageLink: "https://server.com/images/MH12GH3456.jpeg",
     notificationSent: false
   },
@@ -101,15 +101,15 @@ const vehicles = [
     expiryDate: "2030-03-10",
     status: "Active",
     contact: "+919876543214",
-    ownerName: "",
-    ownerLocation: "",
+    ownerName: "Kavita Singh",
+    ownerLocation: "Chennai, Tamil Nadu",
     carbonFootprint: {
       distanceTravelled: 200,
       fuelEfficiency: 20,
       carbonEmitted: 10.00,
       status: "✅ Good"
     },
-    lastChecked: "2025-03-20T14:00:00Z",
+    lastChecked: "2023-03-20T14:00:00Z",
     imageLink: "https://server.com/images/MH12IJ7890.jpeg",
     notificationSent: false
   },
@@ -125,15 +125,15 @@ const vehicles = [
     expiryDate: "2032-02-25",
     status: "Active",
     contact: "+919876543215",
-    ownerName: "",
-    ownerLocation: "",
+    ownerName: "Vikram Malhotra",
+    ownerLocation: "Kolkata, West Bengal",
     carbonFootprint: {
       distanceTravelled: 50,
       fuelEfficiency: 18,
       carbonEmitted: 8.00,
       status: "✅ Good"
     },
-    lastChecked: "2025-03-21T12:15:00Z",
+    lastChecked: "2023-03-21T12:15:00Z",
     imageLink: "https://server.com/images/MH12KL1234.jpeg",
     notificationSent: false
   }
