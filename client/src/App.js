@@ -10,6 +10,7 @@ import PostDetail from './pages/Community/PostDetail';
 import EditPost from './pages/Community/EditPost';
 import VehicleStatistics from './pages/VehicleStatistics';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
@@ -23,7 +24,13 @@ function App() {
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/vehicle-statistics" element={<VehicleStatistics />} />
+            
+            {/* Admin-only Routes */}
+            <Route path="/vehicle-statistics" element={
+              <ProtectedAdminRoute>
+                <VehicleStatistics />
+              </ProtectedAdminRoute>
+            } />
             
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
