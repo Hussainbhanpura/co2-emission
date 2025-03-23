@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom';
 import { useCommunity } from '../../contexts/CommunityContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../../components/ui/card';
-import CreatePostModal from './CreatePostModal';
+import AskShareModal from './AskShareModal';
 import ChatBot from '../../components/ChatBot';
 import { toast } from 'react-toastify';
 
 const CommunityPage = () => {
   const { user } = useAuth();
   const { posts, loading, fetchPosts, likePost, unlikePost } = useCommunity();
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showAskShareModal, setShowAskShareModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   // Track if we've already loaded posts for a specific page
@@ -87,12 +88,25 @@ const CommunityPage = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Community</h1>
-          <Button onClick={() => setShowCreateModal(true)}>
-            Share Your Progress
-          </Button>
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">Community</h1>
+          <div 
+            className="w-full bg-green-50 rounded-lg p-2 cursor-pointer hover:bg-green-100 transition-colors"
+            onClick={() => setShowAskShareModal(true)}
+          >
+            <Input
+              className="w-full bg-white border-0 shadow-sm focus:ring-2 focus:ring-green-500 placeholder-gray-500"
+              placeholder="What do you want to ask or share?"
+              readOnly
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowAskShareModal(true);
+              }}
+            />
+          </div>
         </div>
+
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Recent Activities</h2>
 
         {loading ? (
           <div className="flex justify-center items-center h-64">
@@ -110,11 +124,6 @@ const CommunityPage = () => {
                   <Card key={post._id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     <CardHeader className="pb-2">
                       <div className="flex items-center mb-2">
-                        <img 
-                          src={post.user.avatar || 'https://via.placeholder.com/40'} 
-                          alt={post.user.name}
-                          className="w-10 h-10 rounded-full mr-3"
-                        />
                         <div>
                           <p className="font-medium">{post.user.name}</p>
                           <p className="text-xs text-gray-500">
@@ -200,51 +209,54 @@ const CommunityPage = () => {
                         to={`/community/post/${post._id}`}
                         className="text-sm text-blue-600 hover:underline"
                       >
-                        Read more
+                        View Details
                       </Link>
                     </CardFooter>
                   </Card>
                 ))}
               </div>
             )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center mt-8">
-                <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </Button>
-                  <div className="flex items-center px-4">
-                    Page {currentPage} of {totalPages}
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </Button>
-                </div>
-              </div>
-            )}
           </>
         )}
+        
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-8">
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              
+              {[...Array(totalPages)].map((_, i) => (
+                <Button
+                  key={i}
+                  variant={currentPage === i + 1 ? "default" : "outline"}
+                  onClick={() => handlePageChange(i + 1)}
+                >
+                  {i + 1}
+                </Button>
+              ))}
+              
+              <Button
+                variant="outline"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
-
-      {showCreateModal && (
-        <CreatePostModal 
-          isOpen={showCreateModal} 
-          onClose={() => setShowCreateModal(false)} 
-        />
-      )}
       
-      {/* ChatBot Component */}
-      <ChatBot />
+      <AskShareModal isOpen={showAskShareModal} onClose={() => setShowAskShareModal(false)} />
+      
+      <div className="fixed bottom-4 right-4">
+        <ChatBot />
+      </div>
     </div>
   );
 };
