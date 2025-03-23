@@ -308,3 +308,5 @@ router.get('/cities', async (req, res) => {
   }
 });
 // Historical pollution trends endpoint removed
+
+module.exports = router;
