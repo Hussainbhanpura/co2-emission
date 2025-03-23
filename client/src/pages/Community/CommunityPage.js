@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 
 const CommunityPage = () => {
   const { user } = useAuth();
-  const { posts, loading, fetchPosts, likePost, unlikePost, deletePost, fetchComments } = useCommunity();
+  const { posts, loading, fetchPosts, likePost, unlikePost, deletePost, fetchComments, addComment, deleteComment } = useCommunity();
   const [showAskShareModal, setShowAskShareModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -94,41 +94,50 @@ const CommunityPage = () => {
 
   const handleAddComment = async (e, postId) => {
     e.preventDefault();
+    e.stopPropagation();
     if (!commentText[postId] || !commentText[postId].trim()) return;
     
     try {
-      await useCommunity().addComment(postId, commentText[postId]);
-      setCommentText({
-        ...commentText,
-        [postId]: ''
-      });
-      // Refresh the post to show the new comment
-      await fetchPosts(currentPage);
+      const newComment = await addComment(postId, commentText[postId]);
       
-      // Refresh comments for this post
-      const comments = await fetchComments(postId);
-      if (comments) {
-        setPostComments(prev => ({
-          ...prev,
-          [postId]: comments
-        }));
+      if (newComment) {
+        setCommentText({
+          ...commentText,
+          [postId]: ''
+        });
+        
+        const comments = await fetchComments(postId);
+        if (comments) {
+          setPostComments(prev => ({
+            ...prev,
+            [postId]: comments
+          }));
+        }
+        
+        toast.success("Comment added successfully");
       }
     } catch (error) {
+      console.error("Error adding comment:", error);
       toast.error("Failed to add comment");
     }
   };
 
   const handleDeleteComment = async (postId, commentId) => {
     try {
-      await useCommunity().deleteComment(commentId, postId);
-      toast.success("Comment deleted successfully");
+      // Use the destructured deleteComment function directly
+      const success = await deleteComment(commentId, postId);
       
-      // Update the comments list by removing the deleted comment
-      setPostComments(prev => ({
-        ...prev,
-        [postId]: prev[postId].filter(comment => comment._id !== commentId)
-      }));
+      if (success) {
+        toast.success("Comment deleted successfully");
+        
+        // Update the comments list by removing the deleted comment
+        setPostComments(prev => ({
+          ...prev,
+          [postId]: prev[postId].filter(comment => comment._id !== commentId)
+        }));
+      }
     } catch (error) {
+      console.error("Error deleting comment:", error);
       toast.error("Failed to delete comment");
     }
   };
@@ -268,7 +277,14 @@ const CommunityPage = () => {
                         <h4 className="font-medium mb-3">Comments</h4>
                         
                         {/* Comment input at the top */}
-                        <form onSubmit={(e) => handleAddComment(e, post._id)} className="flex gap-2 mb-4">
+                        <form 
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleAddComment(e, post._id);
+                          }} 
+                          className="flex gap-2 mb-4"
+                        >
                           <Input
                             value={commentText[post._id] || ''}
                             onChange={(e) => handleCommentChange(post._id, e.target.value)}
@@ -279,7 +295,9 @@ const CommunityPage = () => {
                           <Button 
                             type="submit" 
                             size="sm"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
                           >
                             Post
                           </Button>
