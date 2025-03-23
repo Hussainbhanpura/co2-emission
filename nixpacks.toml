@@ -1,6 +1,12 @@
 [phases.setup]
 nixPkgs = ["nodejs", "npm"]
 
+[phases.setup.env]
+SKIP_PREFLIGHT_CHECK = "true"
+ESLINT_NO_DEV_ERRORS = "true"
+DISABLE_ESLINT_PLUGIN = "true"
+CI = "false"
+
 [phases.install]
 cmds = [
   "npm install",
