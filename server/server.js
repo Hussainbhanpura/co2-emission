@@ -76,7 +76,13 @@ app.use((err, req, res, next) => {
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI, {
+    const mongoUri = process.env.MONGODB_URI || process.env.RAILWAY_MONGODB_URI;
+    if (!mongoUri) {
+      console.error('MongoDB URI not found in environment variables');
+      process.exit(1);
+    }
+    
+    await mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

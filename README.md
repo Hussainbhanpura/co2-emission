@@ -35,23 +35,32 @@ A MERN stack application for tracking and analyzing CO2 emissions.
    cd co2-emission
    ```
 
-2. Install server dependencies
+2. Install all dependencies at once
    ```
+   npm run install:all
+   ```
+   
+   Or install dependencies separately:
+   ```
+   # Server dependencies
    cd server
    npm install
-   ```
-
-3. Install client dependencies
-   ```
+   
+   # Client dependencies
    cd ../client
+   npm install
+   
+   # Community service dependencies
+   cd ../community-service
    npm install
    ```
 
-4. Create a `.env` file in the server directory with the following variables:
+3. Create a `.env` file in the server directory with the following variables:
    ```
    PORT=5000
    MONGODB_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
+   COMMUNITY_SERVICE_URL=http://localhost:5002
    ```
 
 5. Start the development servers
@@ -72,7 +81,49 @@ A MERN stack application for tracking and analyzing CO2 emissions.
 - `/server/controllers`: Route controllers
 - `/server/config`: Configuration files
 
+## Deployment
+
+### Railway Deployment
+
+This project is configured for easy deployment on Railway. Follow these steps to deploy:
+
+1. Create a Railway account at [railway.app](https://railway.app/)
+
+2. Install the Railway CLI (optional but recommended)
+   ```
+   npm i -g @railway/cli
+   ```
+
+3. Login to Railway
+   ```
+   railway login
+   ```
+
+4. Initialize your project (from the project root directory)
+   ```
+   railway init
+   ```
+
+5. Set up environment variables in the Railway dashboard:
+   - `PORT`: 5000 (or leave empty to let Railway assign a port)
+   - `NODE_ENV`: production
+   - `MONGODB_URI`: Your MongoDB connection string
+   - `JWT_SECRET`: Your JWT secret key
+   - `JWT_EXPIRE`: 30d
+   - `COMMUNITY_SERVICE_URL`: URL to your deployed community service
+
+6. Deploy your application
+   ```
+   railway up
+   ```
+
+7. Open your deployed application
+   ```
+   railway open
+   ```
+
+Alternatively, you can connect your GitHub repository to Railway for automatic deployments.
+
 ## License
 
 MIT
-# Test update
