@@ -78,6 +78,7 @@ A comprehensive MERN stack application for tracking, analyzing, and visualizing 
    cd co2-emission
    ```
 
+
 2. **Install all dependencies at once**
    ```bash
    npm run install:all
@@ -85,6 +86,7 @@ A comprehensive MERN stack application for tracking, analyzing, and visualizing 
    
    Or install dependencies for each service separately:
    ```bash
+
    # Server dependencies
    cd server
    npm install
@@ -98,11 +100,13 @@ A comprehensive MERN stack application for tracking, analyzing, and visualizing 
    npm install
    ```
 
+
 3. **Environment Setup**
    
    Create `.env` files in both the server and community-service directories:
 
    **Server .env**
+
    ```
    PORT=5000
    MONGO_URI=mongodb://localhost:27017/co2-emission
@@ -226,6 +230,7 @@ Hussain Bhanpura - [GitHub](https://github.com/Hussainbhanpura)
 
 Project Link: [https://github.com/Hussainbhanpura/co2-emission](https://github.com/Hussainbhanpura/co2-emission)
    JWT_SECRET=your_jwt_secret
+   COMMUNITY_SERVICE_URL=http://localhost:5002
    ```
 
 5. Start the development servers
@@ -246,7 +251,49 @@ Project Link: [https://github.com/Hussainbhanpura/co2-emission](https://github.c
 - `/server/controllers`: Route controllers
 - `/server/config`: Configuration files
 
+## Deployment
+
+### Railway Deployment
+
+This project is configured for easy deployment on Railway. Follow these steps to deploy:
+
+1. Create a Railway account at [railway.app](https://railway.app/)
+
+2. Install the Railway CLI (optional but recommended)
+   ```
+   npm i -g @railway/cli
+   ```
+
+3. Login to Railway
+   ```
+   railway login
+   ```
+
+4. Initialize your project (from the project root directory)
+   ```
+   railway init
+   ```
+
+5. Set up environment variables in the Railway dashboard:
+   - `PORT`: 5000 (or leave empty to let Railway assign a port)
+   - `NODE_ENV`: production
+   - `MONGODB_URI`: Your MongoDB connection string
+   - `JWT_SECRET`: Your JWT secret key
+   - `JWT_EXPIRE`: 30d
+   - `COMMUNITY_SERVICE_URL`: URL to your deployed community service
+
+6. Deploy your application
+   ```
+   railway up
+   ```
+
+7. Open your deployed application
+   ```
+   railway open
+   ```
+
+Alternatively, you can connect your GitHub repository to Railway for automatic deployments.
+
 ## License
 
 MIT
-# Test update
