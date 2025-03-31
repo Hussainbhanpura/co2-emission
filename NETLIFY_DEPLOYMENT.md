@@ -1,15 +1,15 @@
-# Deploying CO2 Emission Tracker to Netlify
+# Deploying CO2 Emission Tracker Frontend to Netlify
 
-This guide explains how to deploy the CO2 Emission Tracker application to Netlify, including both the frontend and backend components.
+This guide explains how to deploy the CO2 Emission Tracker frontend to Netlify, while the backend services run on Railway.
 
-## Deployment Options
+## Deployment Strategy
 
-You have two main options for deployment:
+The recommended deployment strategy is:
 
-1. **Frontend-only on Netlify + Backend on Railway** (Recommended)
-2. **Full-stack deployment on Netlify** (Using Netlify Functions)
+- **Frontend**: Deploy the React application (client directory) to Netlify
+- **Backend**: Deploy the API server and community service to Railway
 
-## Option 1: Frontend on Netlify + Backend on Railway (Recommended)
+## Deployment Steps
 
 This is the recommended approach as it leverages Railway's strength in hosting Node.js applications and databases.
 
@@ -38,30 +38,28 @@ This is the recommended approach as it leverages Railway's strength in hosting N
    - `DISABLE_ESLINT_PLUGIN`: true
    - `CI`: false
 
-## Option 2: Full-stack Deployment on Netlify
+## Additional Configuration
 
-This approach uses Netlify Functions to host both frontend and backend.
+### Client-side Routing
 
-### Step 1: Configure for Netlify Functions
+The React application uses client-side routing with React Router. To ensure that all routes work correctly on Netlify, a `_redirects` file has been added to the `client/public` directory with the following content:
 
-The repository has already been configured with:
-- Serverless function files in `/netlify/functions/`
-- Redirect rules in `netlify.toml`
-- Updated API configuration in the frontend
+```
+/*    /index.html   200
+```
 
-### Step 2: Deploy to Netlify
+This tells Netlify to serve the `index.html` file for any route, allowing React Router to handle the routing on the client side.
 
-1. Log in to [Netlify](https://app.netlify.com/)
-2. Click "New site from Git"
-3. Connect to your GitHub repository
-4. Netlify will automatically detect the configuration from `netlify.toml`
-5. Add environment variables:
-   - `MONGODB_URI`: Your MongoDB connection string
-   - `JWT_SECRET`: Secret for JWT token generation
-   - `SKIP_PREFLIGHT_CHECK`: true
-   - `ESLINT_NO_DEV_ERRORS`: true
-   - `DISABLE_ESLINT_PLUGIN`: true
-   - `CI`: false
+### Environment Variables
+
+Make sure to set the following environment variables in your Netlify site settings:
+
+- `REACT_APP_API_URL`: Your Railway backend URL (e.g., `https://co2-emission-api.up.railway.app/api`)
+- `REACT_APP_COMMUNITY_SERVICE_URL`: Your Railway community service URL
+- `SKIP_PREFLIGHT_CHECK`: true
+- `ESLINT_NO_DEV_ERRORS`: true
+- `DISABLE_ESLINT_PLUGIN`: true
+- `CI`: false
 
 ### Step 3: Test the Deployment
 

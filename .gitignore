@@ -1,24 +1,35 @@
-#Node Js ignore file
-# dependencies
-/node_modules
-/client/node_modules
-/server/node_modules
+# Dependencies
+node_modules/
+/client/node_modules/
+/server/node_modules/
+/community-service/node_modules/
 /.pnp
 .pnp.js
 
-# testing
+# Testing
 /coverage
 
-# production
-/build
-/client/build
+# Production builds
+/build/
+/client/build/
+/dist/
 
-# misc
-.DS_Store
-# .env
-# .env.local
-# .env.development.local
-# .env.test.local
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Keep example env files
+!.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 # .env.production.local
 # /server/.env
 

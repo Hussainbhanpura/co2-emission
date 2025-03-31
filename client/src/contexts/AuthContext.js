@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
-import { API_URL } from '../utils/apiConfig';
+// Import centralized API client and error handler
+import { authApi } from '../utils/apiClient';
+import { handleApiError } from '../utils/errorHandler';
 
 const AuthContext = createContext();
 
@@ -17,11 +18,8 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       if (token) {
         try {
-          // Set auth token header
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          
-          // Get user data
-          const res = await axios.get(`/api/auth/me`);
+          // Get user data using the centralized API client
+          const res = await authApi.getProfile();
           
           if (res.data.success) {
             setUser(res.data.user);
@@ -51,20 +49,22 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      const res = await axios.post(`/api/auth/register`, userData);
+      // Use centralized API client
+      const res = await authApi.register(userData);
       
       if (res.data.success) {
+        // Store token and user data
         localStorage.setItem('token', res.data.token);
         setToken(res.data.token);
         setUser(res.data.user);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
       }
       
       setLoading(false);
       return res.data;
     } catch (err) {
       setLoading(false);
-      setError(err.response?.data?.message || 'Registration failed');
+      // Use centralized error handler
+      handleApiError(err, setError, 'register');
       throw err;
     }
   };
@@ -75,20 +75,22 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      const res = await axios.post(`/api/auth/login`, userData);
+      // Use centralized API client
+      const res = await authApi.login(userData);
       
       if (res.data.success) {
+        // Store token and user data
         localStorage.setItem('token', res.data.token);
         setToken(res.data.token);
         setUser(res.data.user);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
       }
       
       setLoading(false);
       return res.data;
     } catch (err) {
       setLoading(false);
-      setError(err.response?.data?.message || 'Login failed');
+      // Use centralized error handler
+      handleApiError(err, setError, 'login');
       throw err;
     }
   };
@@ -98,7 +100,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
-    delete axios.defaults.headers.common['Authorization'];
   };
 
   // Clear errors
