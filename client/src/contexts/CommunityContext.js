@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
+import { API_URL } from '../utils/apiConfig';
 
 const CommunityContext = createContext();
 
@@ -19,7 +20,7 @@ export const CommunityProvider = ({ children }) => {
 
   // Configure axios with auth token
   const api = axios.create({
-    baseURL: '/api/community',
+    baseURL: `${API_URL}/community`,
     headers: {
       'Content-Type': 'application/json',
     },

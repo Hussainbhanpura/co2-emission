@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_URL } from '../utils/apiConfig';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -161,7 +162,7 @@ const AQI = () => {
             setCities(parsedResults);
           } else {
             // Make API request if no cache available
-            const response = await axios.get(`/api/weather/cities/search/${searchQuery}`);
+            const response = await axios.get(`${API_URL}/weather/cities/search/${searchQuery}`);
             
             if (response.data.success && isMounted) {
               setCitySearchResults(response.data.data);
@@ -232,7 +233,7 @@ const AQI = () => {
     }
     
     try {
-      const response = await axios.get('/api/aqi/cities');
+      const response = await axios.get(`${API_URL}/aqi/cities`);
       if (response.data.success) {
         const citiesData = response.data.data;
         setCities(citiesData);
@@ -334,7 +335,7 @@ const AQI = () => {
               } else {
                 // Fetch city data from AccuWeather API based on coordinates
                 try {
-                  const weatherResponse = await axios.get(`/api/weather/cities/geo/${latitude}/${longitude}`);
+                  const weatherResponse = await axios.get(`${API_URL}/weather/cities/geo/${latitude}/${longitude}`);
                   
                   if (weatherResponse.data.success) {
                     locationData = weatherResponse.data.data;
@@ -530,7 +531,7 @@ const AQI = () => {
       const signal = controller.signal;
       
       try {
-        const response = await axios.get(`/api/aqi/city/${selectedCity.name}`, { signal });
+        const response = await axios.get(`${API_URL}/aqi/city/${selectedCity.name}`, { signal });
         
         if (requestCancelled) return;
         
