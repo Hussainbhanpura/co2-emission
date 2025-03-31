@@ -54,8 +54,8 @@ This tells Netlify to serve the `index.html` file for any route, allowing React 
 
 Make sure to set the following environment variables in your Netlify site settings:
 
-- `REACT_APP_API_URL`: Your Railway backend URL (e.g., `https://co2-emission-api.up.railway.app/api`)
-- `REACT_APP_COMMUNITY_SERVICE_URL`: Your Railway community service URL
+- `REACT_APP_API_URL`: `https://co2-emission-production.up.railway.app/api`
+- `REACT_APP_COMMUNITY_SERVICE_URL`: Your Railway community service URL (once you have deployed it)
 - `SKIP_PREFLIGHT_CHECK`: true
 - `ESLINT_NO_DEV_ERRORS`: true
 - `DISABLE_ESLINT_PLUGIN`: true
