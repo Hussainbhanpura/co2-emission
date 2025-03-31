@@ -17,6 +17,7 @@
     "chart.js": "^4.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "express": "^4.21.2",
     "lucide-react": "^0.482.0",
     "postcss": "^8.4.23",
     "react": "^18.2.0",
@@ -56,5 +57,9 @@
     ]
   },
   "proxy": "http://localhost:5000",
-  "homepage": "."
+  "homepage": ".",
+  "devDependencies": {
+    "http-proxy-middleware": "^2.0.7",
+    "ngrok": "^5.0.0-beta.2"
+  }
 }
