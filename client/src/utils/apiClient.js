@@ -55,52 +55,52 @@ communityApi.interceptors.response.use(handleResponse, handleError);
 
 // Auth API
 export const authApi = {
-  login: (credentials) => mainApi.post('/api/auth/login', credentials),
-  register: (userData) => mainApi.post('/api/auth/register', userData),
-  getProfile: () => mainApi.get('/api/auth/me'),
-  updateProfile: (userData) => mainApi.put('/api/profile', userData),
+  login: (credentials) => mainApi.post('/auth/login', credentials),
+  register: (userData) => mainApi.post('/auth/register', userData),
+  getProfile: () => mainApi.get('/auth/me'),
+  updateProfile: (userData) => mainApi.put('/profile', userData),
 };
 
 // Emissions API
 export const emissionsApi = {
-  getAll: () => mainApi.get('/api/emissions'),
-  getById: (id) => mainApi.get(`/api/emissions/${id}`),
-  create: (data) => mainApi.post('/api/emissions', data),
-  update: (id, data) => mainApi.put(`/api/emissions/${id}`, data),
-  delete: (id) => mainApi.delete(`/api/emissions/${id}`),
+  getAll: () => mainApi.get('/emissions'),
+  getById: (id) => mainApi.get(`/emissions/${id}`),
+  create: (data) => mainApi.post('/emissions', data),
+  update: (id, data) => mainApi.put(`/emissions/${id}`, data),
+  delete: (id) => mainApi.delete(`/emissions/${id}`),
 };
 
 // Vehicles API
 export const vehiclesApi = {
-  getAll: () => mainApi.get('/api/vehicles'),
-  getById: (id) => mainApi.get(`/api/vehicles/${id}`),
-  create: (data) => mainApi.post('/api/vehicles', data),
-  update: (id, data) => mainApi.put(`/api/vehicles/${id}`, data),
-  delete: (id) => mainApi.delete(`/api/vehicles/${id}`),
+  getAll: () => mainApi.get('/vehicles'),
+  getById: (id) => mainApi.get(`/vehicles/${id}`),
+  create: (data) => mainApi.post('/vehicles', data),
+  update: (id, data) => mainApi.put(`/vehicles/${id}`, data),
+  delete: (id) => mainApi.delete(`/vehicles/${id}`),
 };
 
 // Statistics API
 export const statisticsApi = {
-  getEmissionsByPeriod: (period) => mainApi.get(`/api/statistics/emissions/${period}`),
-  getEmissionsByVehicle: () => mainApi.get('/api/statistics/emissions/by-vehicle'),
-  getEmissionsTrend: () => mainApi.get('/api/statistics/emissions/trend'),
+  getEmissionsByPeriod: (period) => mainApi.get(`/statistics/emissions/${period}`),
+  getEmissionsByVehicle: () => mainApi.get('/statistics/emissions/by-vehicle'),
+  getEmissionsTrend: () => mainApi.get('/statistics/emissions/trend'),
 };
 
 // Community API
 export const communityApiService = {
-  getPosts: () => mainApi.get('/api/community/posts'),
-  getPostById: (id) => mainApi.get(`/api/community/posts/${id}`),
-  createPost: (data) => mainApi.post('/api/community/posts', data),
-  updatePost: (id, data) => mainApi.put(`/api/community/posts/${id}`, data),
-  deletePost: (id) => mainApi.delete(`/api/community/posts/${id}`),
-  likePost: (id) => mainApi.post(`/api/community/posts/${id}/like`),
-  commentOnPost: (id, data) => mainApi.post(`/api/community/posts/${id}/comments`, data),
+  getPosts: () => mainApi.get('/community/posts'),
+  getPostById: (id) => mainApi.get(`/community/posts/${id}`),
+  createPost: (data) => mainApi.post('/community/posts', data),
+  updatePost: (id, data) => mainApi.put(`/community/posts/${id}`, data),
+  deletePost: (id) => mainApi.delete(`/community/posts/${id}`),
+  likePost: (id) => mainApi.post(`/community/posts/${id}/like`),
+  commentOnPost: (id, data) => mainApi.post(`/community/posts/${id}/comments`, data),
 };
 
 // AQI and Weather API
 export const environmentApi = {
-  getAqi: (location) => mainApi.get(`/api/aqi?location=${location}`),
-  getWeather: (location) => mainApi.get(`/api/weather?location=${location}`),
+  getAqi: (location) => mainApi.get(`/aqi?location=${location}`),
+  getWeather: (location) => mainApi.get(`/weather?location=${location}`),
 };
 
 // Export the raw API instances for advanced use cases
