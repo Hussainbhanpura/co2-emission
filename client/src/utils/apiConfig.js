@@ -1,9 +1,37 @@
-// API URL configuration
+/**
+ * API Configuration
+ * 
+ * This file provides the API URLs for both local development and production.
+ * It imports from the centralized environment configuration in env.js.
+ */
 
-// For local development, these will be empty strings, which means requests will be relative
-// to the current domain (which is what we want for local development with proxy)
-// For production on Netlify or Railway, these will point to the deployed API URLs
-const API_URL = process.env.REACT_APP_API_URL || '';
-const COMMUNITY_SERVICE_URL = process.env.REACT_APP_COMMUNITY_SERVICE_URL || '';
+import { API_BASE_URL, COMMUNITY_SERVICE_URL, IS_NETLIFY } from './env';
 
-export { API_URL, COMMUNITY_SERVICE_URL };
+/**
+ * Get the appropriate API URL based on environment
+ * 
+ * For local development: empty string (relative URLs)
+ * For production: full URLs from environment variables
+ */
+const getApiUrl = () => {
+  // For local development, use relative URLs with the proxy
+  if (!API_BASE_URL && IS_NETLIFY) {
+    return '/api';
+  }
+  return API_BASE_URL;
+};
+
+/**
+ * Get the appropriate community service URL based on environment
+ */
+const getCommunityServiceUrl = () => {
+  // For local development, use relative URLs with the proxy
+  if (!COMMUNITY_SERVICE_URL && IS_NETLIFY) {
+    return '/api/community';
+  }
+  return COMMUNITY_SERVICE_URL;
+};
+
+// Export the API URLs
+export const API_URL = getApiUrl();
+export const COMMUNITY_URL = getCommunityServiceUrl();
