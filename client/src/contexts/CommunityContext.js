@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
-import axios from 'axios';
 import { useAuth } from './AuthContext';
 import { toast } from 'react-toastify';
-import { API_URL } from '../utils/apiConfig';
+import { communityApiService } from '../utils/apiClient';
 
 const CommunityContext = createContext();
 
@@ -17,23 +16,6 @@ export const CommunityProvider = ({ children }) => {
   const [error, setError] = useState(null);
   // Add a cache to prevent duplicate API calls
   const fetchCache = useRef({});
-
-  // Configure axios with auth token
-  const api = axios.create({
-    baseURL: `${API_URL}/community`,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  // Add auth token to requests if available
-  useEffect(() => {
-    if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      delete api.defaults.headers.common['Authorization'];
-    }
-  }, [token]);
 
   // Fetch all posts with rate limiting
   const fetchPosts = useCallback(async (page = 1, limit = 10) => {
@@ -62,7 +44,7 @@ export const CommunityProvider = ({ children }) => {
     setLoading(true);
     try {
       console.log('Actually fetching data for page', page);
-      const res = await api.get(`/posts?page=${page}&limit=${limit}`);
+      const res = await communityApiService.getPosts(page, limit);
       setPosts(res.data.data);
       
       // Cache the result
@@ -76,13 +58,13 @@ export const CommunityProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [api, setLoading, setPosts, setError]);
+  }, [setLoading, setPosts, setError]);
 
   // Fetch single post
   const fetchPost = async (id) => {
     setLoading(true);
     try {
-      const res = await api.get(`/posts/${id}`);
+      const res = await communityApiService.getPostById(id);
       setPost(res.data.data);
       return res.data.data;
     } catch (err) {
@@ -98,7 +80,7 @@ export const CommunityProvider = ({ children }) => {
   const createPost = async (postData) => {
     setLoading(true);
     try {
-      const res = await api.post('/posts', postData);
+      const res = await communityApiService.createPost(postData);
       setPosts([res.data.data, ...posts]);
       toast.success('Post created successfully');
       return res.data.data;
@@ -115,7 +97,7 @@ export const CommunityProvider = ({ children }) => {
   const updatePost = async (id, postData) => {
     setLoading(true);
     try {
-      const res = await api.put(`/posts/${id}`, postData);
+      const res = await communityApiService.updatePost(id, postData);
       setPosts(posts.map(p => p._id === id ? res.data.data : p));
       if (post && post._id === id) {
         setPost(res.data.data);
@@ -135,7 +117,7 @@ export const CommunityProvider = ({ children }) => {
   const deletePost = async (id) => {
     setLoading(true);
     try {
-      await api.delete(`/posts/${id}`);
+      await communityApiService.deletePost(id);
       setPosts(posts.filter(p => p._id !== id));
       toast.success('Post deleted successfully');
       return true;
@@ -151,7 +133,7 @@ export const CommunityProvider = ({ children }) => {
   // Like a post
   const likePost = async (id) => {
     try {
-      const res = await api.put(`/posts/like/${id}`);
+      const res = await communityApiService.likePost(id);
       setPosts(posts.map(p => p._id === id ? { ...p, likes: res.data.data } : p));
       if (post && post._id === id) {
         setPost({ ...post, likes: res.data.data });
@@ -166,7 +148,7 @@ export const CommunityProvider = ({ children }) => {
   // Unlike a post
   const unlikePost = async (id) => {
     try {
-      const res = await api.put(`/posts/unlike/${id}`);
+      const res = await communityApiService.unlikePost(id);
       setPosts(posts.map(p => p._id === id ? { ...p, likes: res.data.data } : p));
       if (post && post._id === id) {
         setPost({ ...post, likes: res.data.data });
@@ -182,7 +164,7 @@ export const CommunityProvider = ({ children }) => {
   const fetchComments = async (postId) => {
     setLoading(true);
     try {
-      const res = await api.get(`/comments/${postId}`);
+      const res = await communityApiService.getComments(postId);
       setComments(res.data.data);
       return res.data.data;
     } catch (err) {
@@ -197,13 +179,13 @@ export const CommunityProvider = ({ children }) => {
   // Add a comment
   const addComment = async (postId, content, parentComment = null) => {
     try {
-      const res = await api.post(`/comments/${postId}`, { content, parentComment });
+      const res = await communityApiService.addComment(postId, content, parentComment);
       setComments([res.data.data, ...comments]);
       // Update comment count in post
       if (post && post._id === postId) {
-        setPost({ ...post, commentsCount: post.commentsCount + 1 });
+        setPost({ ...post, commentCount: post.commentCount + 1 });
       }
-      setPosts(posts.map(p => p._id === postId ? { ...p, commentsCount: p.commentsCount + 1 } : p));
+      setPosts(posts.map(p => p._id === postId ? { ...p, commentCount: p.commentCount + 1 } : p));
       toast.success('Comment added successfully');
       return res.data.data;
     } catch (err) {
@@ -215,7 +197,7 @@ export const CommunityProvider = ({ children }) => {
   // Update a comment
   const updateComment = async (id, content) => {
     try {
-      const res = await api.put(`/comments/${id}`, { content });
+      const res = await communityApiService.updateComment(id, content);
       setComments(comments.map(c => c._id === id ? res.data.data : c));
       toast.success('Comment updated successfully');
       return res.data.data;
@@ -228,13 +210,13 @@ export const CommunityProvider = ({ children }) => {
   // Delete a comment
   const deleteComment = async (id, postId) => {
     try {
-      await api.delete(`/comments/${id}`);
+      await communityApiService.deleteComment(id);
       setComments(comments.filter(c => c._id !== id));
       // Update comment count in post
       if (post && post._id === postId) {
-        setPost({ ...post, commentsCount: post.commentsCount - 1 });
+        setPost({ ...post, commentCount: post.commentCount - 1 });
       }
-      setPosts(posts.map(p => p._id === postId ? { ...p, commentsCount: p.commentsCount - 1 } : p));
+      setPosts(posts.map(p => p._id === postId ? { ...p, commentCount: p.commentCount - 1 } : p));
       toast.success('Comment deleted successfully');
       return true;
     } catch (err) {

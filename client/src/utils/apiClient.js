@@ -77,6 +77,7 @@ export const vehiclesApi = {
   create: (data) => mainApi.post('/api/vehicles', data),
   update: (id, data) => mainApi.put(`/api/vehicles/${id}`, data),
   delete: (id) => mainApi.delete(`/api/vehicles/${id}`),
+  getExceeding: () => mainApi.get('/api/vehicles/exceeding')
 };
 
 // Statistics API
@@ -84,6 +85,7 @@ export const statisticsApi = {
   getEmissionsByPeriod: (period) => mainApi.get(`/api/statistics/emissions/${period}`),
   getEmissionsByVehicle: () => mainApi.get('/api/statistics/emissions/by-vehicle'),
   getEmissionsTrend: () => mainApi.get('/api/statistics/emissions/trend'),
+  getVehicleStats: () => mainApi.get('/api/statistics/vehicles')
 };
 
 // Community API
@@ -93,10 +95,16 @@ export const communityApiService = {
   createPost: (data) => mainApi.post('/api/community/posts', data),
   updatePost: (id, data) => mainApi.put(`/api/community/posts/${id}`, data),
   deletePost: (id) => mainApi.delete(`/api/community/posts/${id}`),
-  likePost: (id) => mainApi.post(`/api/community/posts/${id}/like`),
-  commentOnPost: (id, data) => mainApi.post(`/api/community/posts/${id}/comments`, data),
+  likePost: (id) => mainApi.put(`/api/community/posts/like/${id}`),
+  unlikePost: (id) => mainApi.put(`/api/community/posts/unlike/${id}`),
+  commentOnPost: (id, data) => mainApi.post(`/api/community/comments/${id}`, data),
+  getComments: (postId) => mainApi.get(`/api/community/comments/${postId}`),
+  addComment: (postId, content, parentComment = null) => mainApi.post(`/api/community/comments/${postId}`, { content, parentComment }),
+  updateComment: (id, content) => mainApi.put(`/api/community/comments/${id}`, { content }),
+  deleteComment: (id) => mainApi.delete(`/api/community/comments/${id}`)
 };
-
+// /api/likes/post/:postId
+// @route   GET /api/likes/comment/:commentId
 // AQI and Weather API
 export const environmentApi = {
   getAqi: (location) => mainApi.get(`/api/aqi?location=${location}`),

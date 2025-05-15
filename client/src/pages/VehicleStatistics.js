@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { API_URL } from '../utils/apiConfig';
+import { vehiclesApi, statisticsApi } from '../utils/apiClient';
 import Loader from '../components/Loader';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -25,16 +25,16 @@ const VehicleStatistics = () => {
         // Fetch vehicles based on active tab
         let vehiclesResponse;
         if (activeTab === 'exceeding') {
-          vehiclesResponse = await axios.get(`${API_URL}/vehicles/exceeding`);
+          vehiclesResponse = await vehiclesApi.getExceeding();
         } else {
-          vehiclesResponse = await axios.get(`${API_URL}/vehicles`);
+          vehiclesResponse = await vehiclesApi.getAll();
         }
         
         setVehicles(vehiclesResponse.data.data);
         
         // Fetch stats if on stats tab
         if (activeTab === 'stats') {
-          const statsResponse = await axios.get(`${API_URL}/vehicles/stats`);
+          const statsResponse = await statisticsApi.getVehicleStats();
           setStats(statsResponse.data.data);
         }
       } catch (err) {
